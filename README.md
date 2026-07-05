@@ -1,50 +1,56 @@
 # dotfiles
 
-Configuración portable de **Neovim (lazy.nvim) + tmux + zsh (oh-my-zsh + powerlevel10k)**.
-Misma config en macOS, Linux y WSL. Un solo comando para levantar cualquier máquina.
+Portable terminal environment: **Neovim (lazy.nvim) + tmux (TPM) + zsh (oh-my-zsh + powerlevel10k)**.
+One command bootstraps a fresh machine. Same config on macOS, Linux, and WSL.
 
-## Filosofía
-
-Se versiona **la receta, no los ingredientes**:
-
-- ✅ Se versiona: tus configs (`.zshrc`, `.p10k.zsh`, `.tmux.conf`, `~/.config/nvim`) y el `lazy-lock.json`.
-- ❌ No se versiona: `oh-my-zsh`, los plugins de zsh/tmux/nvim. Los reinstala `install.sh`, TPM y lazy.
-
-Los **symlinks** los maneja [GNU Stow](https://www.gnu.org/software/stow/): la config vive en este repo y Stow la enlaza a `$HOME`.
-
-## Instalación en una máquina nueva
+## Install
 
 ```sh
-git clone https://github.com/<TU_USUARIO>/dotfiles.git ~/dotfiles
+git clone git@github.com:0xBroom/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-./install.sh
+./install.sh              # headless/SSH box: ./install.sh --no-font
 ```
 
-En un servidor/nube sin pantalla (solo SSH), saltea la fuente:
+`install.sh` is idempotent — safe to re-run. Existing dotfiles are backed up
+(`*.pre-dotfiles.<timestamp>`) before symlinking.
 
-```sh
-./install.sh --no-font
-```
+## What it does
 
-## Estructura (Stow)
+1. Detects OS (macOS / Linux-apt / WSL) and installs tools via `brew` or `apt`:
+   `git zsh tmux neovim ripgrep fd stow`.
+2. Installs oh-my-zsh, then clones the third-party zsh pieces:
+   `powerlevel10k`, `zsh-autosuggestions`, `zsh-syntax-highlighting`.
+3. Installs TPM and the MesloLGS Nerd Font (skipped on headless hosts).
+4. `stow`s the config packages into `$HOME`.
+5. Restores Neovim plugins headless (`Lazy! restore`, pinned by `lazy-lock.json`)
+   and installs tmux plugins via TPM.
+6. Sets zsh as the default shell.
+
+## Design
+
+Version the recipe, not the ingredients:
+
+- **Tracked**: config files + `lazy-lock.json` (pinned plugin versions).
+- **Not tracked**: oh-my-zsh, zsh/tmux/nvim plugins — reinstalled by `install.sh`, TPM, and lazy.
+
+Symlinks are managed by [GNU Stow](https://www.gnu.org/software/stow/). Each top-level
+folder is a Stow package whose layout mirrors its target path under `$HOME`:
 
 ```
 dotfiles/
-├── install.sh              # detecta SO, instala herramientas + fonts, corre stow
-├── zsh/   .zshrc  .p10k.zsh
-├── tmux/  .tmux.conf
-└── nvim/  .config/nvim/    # incluye lazy-lock.json (versiones fijas de plugins)
+├── install.sh
+├── zsh/    .zshrc  .p10k.zsh          -> ~/.zshrc, ~/.p10k.zsh
+├── tmux/   .tmux.conf                 -> ~/.tmux.conf
+└── nvim/   .config/nvim/              -> ~/.config/nvim/  (incl. lazy-lock.json)
 ```
-
-Cada carpeta es un "paquete" Stow: su interior refleja la ruta relativa a `$HOME`.
 
 ## Nerd Font
 
-La fuente (**MesloLGS NF**) la renderiza el terminal que tenés **enfrente**, no el host remoto.
-`install.sh` la instala solo en máquinas con entorno gráfico. Después seleccionala en tu
-emulador (iTerm2 / WezTerm / Windows Terminal / Ghostty).
+Glyphs are rendered by the terminal in front of you, **not** the remote host, so
+`install.sh` only installs the font on machines with a display. Select **MesloLGS NF**
+in your terminal emulator (iTerm2 / WezTerm / Ghostty / Windows Terminal).
 
-## Editar la config
+## Editing config
 
-Como son symlinks, editás en `~/.config/nvim` (o donde sea) y estás editando el repo.
-Luego: `cd ~/dotfiles && git add -A && git commit && git push`.
+Files are symlinks into this repo, so edit in place (`~/.config/nvim`, `~/.zshrc`, …)
+and commit from `~/dotfiles`.
