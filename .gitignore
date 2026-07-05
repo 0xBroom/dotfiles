@@ -1,0 +1,24 @@
+# Cosas que se INSTALAN, no se versionan.
+# El framework y los plugins los reinstala install.sh / lazy / TPM.
+
+# oh-my-zsh (framework completo, se reinstala)
+.oh-my-zsh/
+
+# plugins de neovim (los baja lazy.nvim segun lazy-lock.json)
+nvim/.config/nvim/lazy/
+nvim/.config/nvim/plugin/packer_compiled.lua
+
+# estado / cache de neovim
+nvim/.config/nvim/.netrwhist
+nvim/.config/nvim/spell/
+
+# tmux plugins (los baja TPM)
+.tmux/plugins/
+
+# caches de zsh
+.zcompdump*
+zsh/.zcompdump*
+*.zwc
+
+# basura de SO
+.DS_Store
