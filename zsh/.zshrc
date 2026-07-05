@@ -94,8 +94,9 @@ source $ZSH/oh-my-zsh.sh
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+# Language environment: seteá UTF-8 solo si no viene ya definido
+# (evita cuadraditos en servers cloud sin locale, sin pisar el locale local).
+export LANG="${LANG:-en_US.UTF-8}"
 
 # Preferred editor for local and remote sessions
 export EDITOR='nvim'

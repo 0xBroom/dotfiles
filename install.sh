@@ -54,7 +54,14 @@ install_packages() {
       log "Instalando paquetes con apt..."
       sudo apt-get update -y
       # fd se llama fd-find en Debian/Ubuntu; ripgrep = ripgrep
-      sudo apt-get install -y git zsh tmux ripgrep fd-find stow curl unzip fontconfig build-essential
+      sudo apt-get install -y git zsh tmux ripgrep fd-find stow curl unzip fontconfig build-essential locales
+      # Locale UTF-8: imágenes cloud minimalistas suelen venir sin él y ahí
+      # p10k/nvim muestran cuadraditos. Lo generamos si falta.
+      if ! locale -a 2>/dev/null | grep -qiE 'en_US\.utf-?8'; then
+        log "Generando locale en_US.UTF-8..."
+        sudo locale-gen en_US.UTF-8 >/dev/null 2>&1 || true
+        sudo update-locale LANG=en_US.UTF-8 >/dev/null 2>&1 || true
+      fi
       # neovim de apt suele estar viejo -> preferimos el appimage/repo oficial si falta o es < 0.9
       if ! command -v nvim >/dev/null 2>&1; then
         warn "Instalando Neovim (unstable PPA para versión reciente)..."
