@@ -145,6 +145,9 @@ backup_if_real() { # respalda un path si es archivo/dir real (no symlink)
 }
 log "Creando symlinks con stow..."
 cd "$DOTFILES_DIR"
+# ~/.config DEBE existir antes de stow: si no, stow "foldea" y symlinkea ~/.config
+# entero al repo (peligroso: otras apps escribirían dentro de tus dotfiles).
+mkdir -p "$HOME/.config"
 backup_if_real "$HOME/.zshrc"
 backup_if_real "$HOME/.p10k.zsh"
 backup_if_real "$HOME/.tmux.conf"
@@ -167,9 +170,14 @@ log "Instalando plugins de tmux (TPM)..."
 # ---------------------------------------------------------------------------
 # 9. zsh como shell por defecto
 # ---------------------------------------------------------------------------
-if [[ "$SHELL" != *zsh ]]; then
+ZSH_BIN="$(command -v zsh)"
+if [[ "$SHELL" != "$ZSH_BIN" ]]; then
   log "Cambiando shell por defecto a zsh..."
-  chsh -s "$(command -v zsh)" || warn "No pude cambiar la shell. Hacelo con: chsh -s \$(which zsh)"
+  # chsh sin sudo pide password por PAM y falla en cuentas sin contraseña;
+  # vía sudo (como root) no dispara ese prompt.
+  sudo chsh -s "$ZSH_BIN" "$(whoami)" 2>/dev/null \
+    || chsh -s "$ZSH_BIN" 2>/dev/null \
+    || warn "No pude cambiar la shell. Hacelo con: chsh -s $ZSH_BIN"
 fi
 
 log "Listo. Abrí una terminal nueva. Si p10k pide config: p10k configure (o ya viene de tu .p10k.zsh)."
