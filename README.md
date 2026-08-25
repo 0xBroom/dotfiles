@@ -44,6 +44,20 @@ dotfiles/
 └── nvim/   .config/nvim/              -> ~/.config/nvim/  (incl. lazy-lock.json)
 ```
 
+## Machine-specific config
+
+`zsh/.zshrc` is shared across macOS, Linux, and WSL, so it may only contain what
+applies everywhere. Anything machine-bound — local runtimes, cloud SDKs, personal
+helper scripts — goes in `~/.zshrc.local`, which is **not** tracked. The tracked
+`.zshrc` sources it last, so it can override anything above it:
+
+```sh
+cp zshrc.local.example ~/.zshrc.local   # then edit
+```
+
+Guard every block with an existence check (`[ -f ... ] && source ...`) so the same
+file stays harmless on a machine where the tool isn't installed.
+
 ## Nerd Font
 
 Glyphs are rendered by the terminal in front of you, **not** the remote host, so

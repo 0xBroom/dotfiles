@@ -22,3 +22,6 @@ zsh/.zcompdump*
 
 # basura de SO
 .DS_Store
+
+# config local por maquina (plantilla: zshrc.local.example en la raiz)
+.zshrc.local

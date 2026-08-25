@@ -127,3 +127,15 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# ---------------------------------------------------------------------------
+# Config ESPECIFICA DE ESTA MAQUINA (no versionada).
+#
+# CONCEPTO: este .zshrc se comparte entre macOS, Linux y WSL, asi que solo
+# puede contener lo que aplica en TODAS. Lo que depende de la maquina
+# (runtimes, SDKs, herramientas del equipo) va en ~/.zshrc.local, que no
+# esta en el repo. Va al final para que pueda pisar cualquier cosa de arriba.
+#
+# Ver zshrc.local.example como plantilla.
+# ---------------------------------------------------------------------------
+[ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
