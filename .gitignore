@@ -25,3 +25,6 @@ zsh/.zcompdump*
 
 # config local por maquina (plantilla: zshrc.local.example en la raiz)
 .zshrc.local
+
+# estado de herramientas locales de agentes (registry de skills, caches)
+.atl/
