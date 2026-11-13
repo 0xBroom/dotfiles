@@ -124,7 +124,7 @@ log "Instalando TPM (tmux plugin manager)..."
 clone_or_pull https://github.com/tmux-plugins/tpm.git "$HOME/.tmux/plugins/tpm"
 
 # ---------------------------------------------------------------------------
-# 6. Nerd Font (MesloLGS NF — la que recomienda powerlevel10k)
+# 6. Nerd Font (MesloLGS Nerd Font, de nerd-fonts vía brew cask)
 #    Solo tiene sentido donde hay una pantalla que renderice el terminal.
 # ---------------------------------------------------------------------------
 install_font() {
@@ -145,7 +145,7 @@ install_font() {
     fi
     rm -rf "$tmp"
   fi
-  warn "IMPORTANTE: seleccioná 'MesloLGS NF' en tu emulador de terminal (iTerm2/WezTerm/Windows Terminal)."
+  warn "IMPORTANTE: seleccioná 'MesloLGS Nerd Font Mono' en tu emulador de terminal (Ghostty ya la trae en su config)."
 }
 install_font
 
@@ -166,11 +166,19 @@ cd "$DOTFILES_DIR"
 # ~/.config DEBE existir antes de stow: si no, stow "foldea" y symlinkea ~/.config
 # entero al repo (peligroso: otras apps escribirían dentro de tus dotfiles).
 mkdir -p "$HOME/.config"
+# Same for apps that write runtime state (logs, sockets, sessions) next to their
+# config: the dir must be real so only the config file is symlinked.
+mkdir -p "$HOME/.config/ghostty" "$HOME/.config/herdr"
 backup_if_real "$HOME/.zshrc"
 backup_if_real "$HOME/.p10k.zsh"
 backup_if_real "$HOME/.tmux.conf"
 backup_if_real "$HOME/.config/nvim"
-stow --target="$HOME" --restow zsh tmux nvim
+backup_if_real "$HOME/.config/ghostty/config"
+backup_if_real "$HOME/.config/herdr/config.toml"
+# Ghostty on macOS also loads this path (after ~/.config); back it up so the repo config wins.
+backup_if_real "$HOME/Library/Application Support/com.mitchellh.ghostty/config"
+backup_if_real "$HOME/Library/Application Support/com.mitchellh.ghostty/config.ghostty"
+stow --target="$HOME" --restow zsh tmux nvim ghostty herdr
 
 # ---------------------------------------------------------------------------
 # 8. Instalar plugins de nvim (headless, según lazy-lock.json) y tmux

@@ -25,6 +25,7 @@ brew "gifsicle"
 brew "git"
 # Audit git repos for secrets
 brew "gitleaks"
+brew "herdr"
 # Simple terminal UI for git commands
 brew "lazygit"
 # Linux virtual machines
@@ -84,6 +85,7 @@ cask "flutter"
 cask "font-meslo-lg-nerd-font"
 # Set of tools to manage resources and applications hosted on Google Cloud
 cask "gcloud-cli"
+cask "ghostty"
 # OpenJDK distribution from Microsoft
 cask "microsoft-openjdk@17"
 # Whisper dictation/transcription app

@@ -1,0 +1,16 @@
+onboarding = false
+[keys]
+previous_agent = "prefix+shift+h"
+next_agent = "prefix+shift+l"
+focus_agent = "prefix+alt+1..9"
+previous_workspace = "prefix+shift+k"
+next_workspace = "prefix+shift+j"
+switch_workspace = "prefix+shift+1..9"
+
+[ui.toast]
+delivery = "system"
+
+[theme]
+auto_switch = true
+dark_name = "catppuccin"
+light_name = "catppuccin-latte"

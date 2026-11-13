@@ -1,0 +1,16 @@
+# Ghostty config (managed by ~/dotfiles). Docs: https://ghostty.org/docs/config
+
+# Quick terminal
+keybind = global:cmd+;=toggle_quick_terminal
+quick-terminal-screen = mouse
+quick-terminal-size = 70%,50%
+
+# Font (Nerd Font for powerlevel10k icons)
+font-family = MesloLGS Nerd Font Mono
+
+# Window
+background-opacity = 0.95
+
+# Theme
+
+theme = dark:Catppuccin Frappe,light:Catppuccin Latte

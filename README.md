@@ -44,7 +44,9 @@ dotfiles/
 ├── Brewfile                           (macOS packages, not stowed)
 ├── zsh/    .zshrc  .p10k.zsh          -> ~/.zshrc, ~/.p10k.zsh
 ├── tmux/   .tmux.conf                 -> ~/.tmux.conf
-└── nvim/   .config/nvim/              -> ~/.config/nvim/  (incl. lazy-lock.json)
+├── nvim/   .config/nvim/              -> ~/.config/nvim/  (incl. lazy-lock.json)
+├── ghostty/ .config/ghostty/config     -> ~/.config/ghostty/config
+└── herdr/  .config/herdr/config.toml  -> ~/.config/herdr/config.toml  (keys, theme)
 ```
 
 ## Machine-specific config
@@ -82,8 +84,8 @@ To refresh the `Brewfile` from the current machine:
 ## Nerd Font
 
 Glyphs are rendered by the terminal in front of you, **not** the remote host, so
-`install.sh` only installs the font on machines with a display. Select **MesloLGS NF**
-in your terminal emulator (iTerm2 / WezTerm / Ghostty / Windows Terminal).
+`install.sh` only installs the font on machines with a display. Select **MesloLGS Nerd Font Mono**
+in your terminal emulator (Ghostty already sets it in its config).
 
 ## Editing config
 
