@@ -8,11 +8,13 @@ fi
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
-# Homebrew on PATH (Apple Silicon: /opt/homebrew, Intel: /usr/local). No-op elsewhere.
+# Homebrew on PATH again: ~/.zshenv already did it, but macOS /etc/zprofile (path_helper)
+# reorders PATH for login shells. typeset -U drops the duplicates.
 for _brew in /opt/homebrew/bin/brew /usr/local/bin/brew; do
   [[ -x $_brew ]] && { eval "$($_brew shellenv)"; break; }
 done
 unset _brew
+typeset -U path
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"

@@ -169,6 +169,7 @@ mkdir -p "$HOME/.config"
 # Same for apps that write runtime state (logs, sockets, sessions) next to their
 # config: the dir must be real so only the config file is symlinked.
 mkdir -p "$HOME/.config/ghostty" "$HOME/.config/herdr"
+backup_if_real "$HOME/.zshenv"
 backup_if_real "$HOME/.zshrc"
 backup_if_real "$HOME/.p10k.zsh"
 backup_if_real "$HOME/.tmux.conf"

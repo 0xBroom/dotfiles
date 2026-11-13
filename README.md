@@ -42,7 +42,7 @@ folder is a Stow package whose layout mirrors its target path under `$HOME`:
 dotfiles/
 ├── install.sh
 ├── Brewfile                           (macOS packages, not stowed)
-├── zsh/    .zshrc  .p10k.zsh          -> ~/.zshrc, ~/.p10k.zsh
+├── zsh/    .zshenv .zshrc .p10k.zsh   -> ~/.zshenv, ~/.zshrc, ~/.p10k.zsh
 ├── tmux/   .tmux.conf                 -> ~/.tmux.conf
 ├── nvim/   .config/nvim/              -> ~/.config/nvim/  (incl. lazy-lock.json)
 ├── ghostty/ .config/ghostty/config     -> ~/.config/ghostty/config
