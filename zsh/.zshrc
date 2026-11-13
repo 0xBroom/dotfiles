@@ -8,6 +8,12 @@ fi
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
+# Homebrew on PATH (Apple Silicon: /opt/homebrew, Intel: /usr/local). No-op elsewhere.
+for _brew in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+  [[ -x $_brew ]] && { eval "$($_brew shellenv)"; break; }
+done
+unset _brew
+
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -127,6 +133,70 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# ---------------------------------------------------------------------------
+# macOS only.
+# ---------------------------------------------------------------------------
+if [[ "$OSTYPE" == darwin* ]]; then
+  # ffmpeg helper: convert a video to an optimized gif (needs ffmpeg + gifsicle).
+  video_to_gif() {
+    ffmpeg -i "$1" -vf "fps=10,scale=480:-1:flags=lanczos" -pix_fmt rgb8 -r 10 -f gif - | \
+      gifsicle --optimize=3 --colors 64 --lossy=80 -o "${1%.*}.gif" && \
+      osascript -e "display notification \"${1%.*}.gif successfully converted and saved\" with title \"MOV2GIF SUCCESS!\""
+  }
+
+  # Powerlevel10k: follow macOS light/dark appearance.
+  # Dark keeps ~/.p10k.zsh as is; light remaps its 256-color palette to Catppuccin Latte.
+  zmodload zsh/datetime
+  typeset -gA _p10k_latte=(
+    238 '#ccd0da' 246 '#9ca0b0'
+    255 '#4c4f69' 248 '#5c5f77' 244 '#6c6f85' 242 '#7c7f93'
+    31 '#1e66f5' 32 '#1e66f5' 33 '#1e66f5' 38 '#1e66f5' 39 '#1e66f5' 74 '#1e66f5'
+    81 '#209fb5' 110 '#209fb5' 117 '#209fb5' 67 '#7287fd' 68 '#7287fd' 103 '#7287fd'
+    96 '#8839ef' 99 '#8839ef' 129 '#8839ef' 134 '#8839ef' 135 '#8839ef'
+    34 '#40a02b' 35 '#40a02b' 70 '#40a02b' 72 '#40a02b' 76 '#40a02b' 106 '#40a02b'
+    37 '#179299' 66 '#179299'
+    178 '#df8e1d' 180 '#df8e1d' 220 '#df8e1d'
+    94 '#fe640b' 130 '#fe640b' 166 '#fe640b' 172 '#fe640b' 208 '#fe640b'
+    125 '#d20f39' 160 '#d20f39' 161 '#d20f39' 196 '#d20f39' 168 '#ea76cb'
+  )
+  typeset -g _p10k_appearance= _p10k_appearance_checked=0
+
+  _p10k_detect_appearance() {
+    [[ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" == Dark ]] && print dark || print light
+  }
+
+  _p10k_apply_appearance() {
+    local mode=$1 name value
+    source ~/.p10k.zsh                      # restore the dark (original) config
+    if [[ $mode == light ]]; then
+      for name in ${(k)parameters[(I)POWERLEVEL9K_*(FOREGROUND|BACKGROUND)]}; do
+        value=${(P)name}
+        [[ -n $value && -n ${_p10k_latte[$value]} ]] && typeset -g $name=${_p10k_latte[$value]}
+      done
+      typeset -g POWERLEVEL9K_LEFT_SUBSEGMENT_SEPARATOR='%F{#9ca0b0}\uE0B1'
+      typeset -g POWERLEVEL9K_RIGHT_SUBSEGMENT_SEPARATOR='%F{#9ca0b0}\uE0B3'
+    fi
+    _p10k_appearance=$mode
+  }
+
+  # Re-check at most every 3 seconds so open shells follow the system switch.
+  _p10k_appearance_precmd() {
+    (( EPOCHSECONDS - _p10k_appearance_checked < 3 )) && return
+    _p10k_appearance_checked=$EPOCHSECONDS
+    local mode=$(_p10k_detect_appearance)
+    [[ $mode == $_p10k_appearance ]] && return
+    _p10k_apply_appearance $mode
+    (( $+functions[p10k] )) && p10k reload
+  }
+
+  if [[ -f ~/.p10k.zsh ]]; then
+    _p10k_appearance_checked=$EPOCHSECONDS
+    _p10k_apply_appearance $(_p10k_detect_appearance)
+    autoload -Uz add-zsh-hook
+    add-zsh-hook precmd _p10k_appearance_precmd
+  fi
+fi
 
 # ---------------------------------------------------------------------------
 # Config ESPECIFICA DE ESTA MAQUINA (no versionada).

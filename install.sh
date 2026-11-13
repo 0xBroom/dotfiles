@@ -47,8 +47,19 @@ install_packages() {
       log "Instalando Homebrew..."
       /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
+    # En una Mac recién instalada brew todavía no está en el PATH de este script.
+    for b in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+      [[ -x "$b" ]] && { eval "$("$b" shellenv)"; break; }
+    done
     log "Instalando paquetes con brew..."
     brew install git zsh tmux neovim ripgrep fd stow curl
+    # Resto de herramientas y apps de la máquina (Brewfile del repo).
+    # Un paquete que falle no aborta el bootstrap.
+    if [[ -f "$DOTFILES_DIR/Brewfile" ]]; then
+      log "Instalando el Brewfile (puede tardar)..."
+      brew bundle --file="$DOTFILES_DIR/Brewfile" \
+        || warn "Algunos paquetes del Brewfile fallaron. Revisá con: brew bundle check --file=$DOTFILES_DIR/Brewfile"
+    fi
   elif [[ "$OS" == "linux" ]]; then
     if command -v apt-get >/dev/null 2>&1; then
       log "Instalando paquetes con apt..."
