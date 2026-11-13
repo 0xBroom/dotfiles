@@ -139,3 +139,12 @@ export PATH="$HOME/.local/bin:$PATH"
 # Ver zshrc.local.example como plantilla.
 # ---------------------------------------------------------------------------
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
+
+# direnv: loads per-directory .envrc files (e.g. multi-account gh).
+if command -v direnv >/dev/null 2>&1; then
+  export DIRENV_LOG_FORMAT=""   # keep direnv quiet: p10k instant prompt hates console output
+  eval "$(direnv hook zsh)"
+fi
+
+# worktrunk (wt) shell integration.
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi

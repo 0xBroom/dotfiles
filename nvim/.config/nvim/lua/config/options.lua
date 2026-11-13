@@ -32,7 +32,10 @@ opt.hlsearch = true -- mantiene el resaltado (lo limpiamos con <Esc>)
 -- UI.
 opt.termguicolors = true -- colores de 24 bits (necesario para los temas)
 opt.signcolumn = "yes" -- columna fija para signos (git/diagnósticos)
-opt.wrap = false -- no parte las líneas largas
+opt.wrap = true -- parte visualmente las líneas largas en el borde de la ventana
+opt.linebreak = true -- corta por palabras, no a mitad de palabra
+opt.breakindent = true -- la continuación respeta la indentación de la línea
+opt.showbreak = "↪ " -- marca las líneas que son continuación
 opt.splitright = true -- splits verticales abren a la derecha
 opt.splitbelow = true -- splits horizontales abren abajo
 
